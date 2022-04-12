@@ -132,4 +132,30 @@ router.post("/addEHR", async (req,res) =>{
     }
 });
 
+router.get("/", (req,res)=>{
+
+    const hospitalPubKey = req.body.hospitalPubKey
+    axios.get('http://localhost:9984/api/v1/assets/?search="'+req.body.userPubKey+'"')
+        .then(function (resp) {
+            var json = {
+                data: []
+            }
+            for (x = 0; x < resp.data.length; x++) {
+                if (resp.data[x].data.partitionkey == "EHR" && 
+                resp.data[x].data.hospital.hospitalPubKey == hospitalPubKey) {
+                    json.data.push(
+                    resp.data[x].data
+                    ) 
+                }
+            }
+            let saringData = [...new Set(json.data)];
+            res.status(200).json(saringData);
+        })
+        .catch(function(err){
+            res.status(500).json({
+                message: err.message
+            })
+        })
+});
+
 module.exports = router;

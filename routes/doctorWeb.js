@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 
 router.post("/login", async (req,res) =>{
     try {
-
         const email = req.body.email;
         axios.get('http://localhost:9984/api/v1/assets/?search="'+email+'"')
         .then(function (resp) {
@@ -71,14 +70,14 @@ router.post("/addEHR", async (req,res) =>{
                     const hospitalId = resp.data[0].id;
                     const hospitalName = resp.data[0].data.name;
                     const hospitalPubKey = resp.data[0].data.hospitalPubKey
-                    const data ={
+                    const data = /*new EHR({})*/{
                         "id": mongoose.Types.ObjectId,
                         "patient":{
                             "id": userId,
-                            "name": userName,
-                            "dob": userDOB,
-                            "userBDBPubKey": userBDBPubKey,
-                            "userPubKey": newEHR.userPubKey,
+                            // "name": userName,
+                            // "dob": userDOB,
+                            // "userBDBPubKey": userBDBPubKey,
+                            // "userPubKey": newEHR.userPubKey,
                             "EHRrecords":{
                                 "diseases": newEHR.diseases,
                                 "diagnoses": newEHR.diagnoses,
@@ -87,12 +86,12 @@ router.post("/addEHR", async (req,res) =>{
                         },
                         "hospital":{
                             "id": hospitalId,
-                            "name": hospitalName,
-                            "hospitalPubKey": hospitalPubKey
+                            // "name": hospitalName,
+                            // "hospitalPubKey": hospitalPubKey
                         },
                         "doctor":{
                             "id": doctorId,
-                            "name": doctorName
+                            // "name": doctorName
                         },
                         "partitionkey": newEHR.partitionKey
                     }

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const User = require("../models/User");
+const Patients = require("../models/Patients");
 //cryptoJS = library buat security banyak hash sama encrypted dkk
 const CryptoJS = require("crypto-js");
 //jwt buat token buat security 
@@ -16,9 +16,10 @@ router.post("/register", async (req,res) => {
 
     const user = new driver.Ed25519Keypair()
 
-    const newUser = new User({
+    const newPatients = new Patients({
         id: mongoose.Types.ObjectId,
         name: req.body.name,
+        NIK: req.body.NIK,
         email: req.body.email,
         password: CryptoJS.AES.encrypt(
             req.body.password, process.env.PASS_USR
@@ -26,25 +27,12 @@ router.post("/register", async (req,res) => {
         phone: req.body.phone,
         dob: req.body.dob,
         address: req.body.address,
-        userBDBPubKey: user.publicKey,
-        userPubKey: req.body.userPubKey,
-        partitionKey: "User",
+        patientPubKey: req.body.patientPubKey,
+        model: "patient",
     });
 
     try {
-        const data ={
-            "id": newUser.id,
-            "name": newUser.name,
-            "email": newUser.email,
-            "password": newUser.password,
-            "phone": newUser.phone,
-            "dob": newUser.dob,
-            "address": newUser.address,
-            "userBDBPubKey": newUser.userBDBPubKey,
-            "userPubKey": newUser.userPubKey,
-            "partitionKey": newUser.partitionKey
-        }
-
+        const data = newPatients
         const metadata = null
 
         const txCreateUser = driver.Transaction.makeCreateTransaction(
